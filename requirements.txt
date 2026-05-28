@@ -1,0 +1,15 @@
+# ytdl-cli runtime requirements
+# Install with: pip install -r requirements.txt
+
+# core download engine
+yt-dlp>=2024.1.1
+
+# terminal UI
+rich>=13.7.0
+
+# CLI framework
+typer[all]>=0.12.0
+
+# TOML write support (Python < 3.11 needs tomli for read too)
+tomli-w>=1.0.0
+tomli>=2.0.1; python_version < "3.11"

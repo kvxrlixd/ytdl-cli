@@ -1,0 +1,62 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+pip-wheel-metadata/
+MANIFEST
+
+# ── virtual environments ──────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+.env
+
+# ── PyInstaller ───────────────────────────────────────────────────────────────
+*.spec
+*.exe
+*.app
+dist/
+build/
+
+# ── downloads folder (keep dir, ignore contents) ─────────────────────────────
+downloads/*
+!downloads/.gitkeep
+
+# ── runtime data ─────────────────────────────────────────────────────────────
+# (history and config live in ~/.ytdl — not in the repo)
+*.log
+*.json.bak
+
+# ── typing / linting ─────────────────────────────────────────────────────────
+.mypy_cache/
+.ruff_cache/
+.dmypy.json
+
+# ── testing ───────────────────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+
+# ── editors ───────────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ── secrets / cookies ─────────────────────────────────────────────────────────
+cookies.txt
+*.cookies
+*.netscape
