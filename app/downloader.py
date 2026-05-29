@@ -397,6 +397,8 @@ class DownloadManager:
                 with yt_dlp.YoutubeDL(opts) as ydl:
                     info_dict = ydl.extract_info(url, download=True)
                     result.title  = info_dict.get("title", url)
+                    orig_filepath = ydl.prepare_filename(info_dict)
+                    result.filepath = str(Path(orig_filepath).with_suffix(f".{audio_format}"))
                     result.status = "done"
                     progress.update(task, description="[green]done")
             except yt_dlp.utils.DownloadError as exc:

@@ -48,6 +48,7 @@ from app.ui import (
     print_history_table,
     print_rule,
     print_video_info,
+    prompt_quality_selection,
     warn,
 )
 from app.utils import (
@@ -84,7 +85,7 @@ _cookies_help  = "Path to a Netscape-format cookies.txt file."
 @app.command()
 def get(
     url: str = typer.Argument(..., help="YouTube video URL."),
-    quality:  str           = typer.Option("best",   "-q", "--quality",        help=_quality_help),
+    quality:  Optional[str] = typer.Option(None,     "-q", "--quality",        help=_quality_help),
     fps:      str           = typer.Option("best",   "-f", "--fps",             help=_fps_help),
     output:   Optional[str] = typer.Option(None,     "-o", "--output",          help=_output_help),
     subs:     bool          = typer.Option(False,    "-s", "--subs",            help="Download subtitles."),
@@ -103,8 +104,12 @@ def get(
 
     if browser:   cfg.cookies_browser = browser
     if cookies:   cfg.cookies_file    = cookies
+    
     if auto_quality:
         quality, fps = "best", "best"
+
+    if quality is None:
+        quality = prompt_quality_selection(cfg.default_quality or "best")
 
     # validate
     if quality not in QUALITY_CHOICES:

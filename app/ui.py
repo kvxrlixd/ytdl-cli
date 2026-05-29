@@ -60,11 +60,11 @@ console = Console(theme=THEME, highlight=False)
 # ── banner ────────────────────────────────────────────────────────────────────
 
 BANNER = r"""
- __  _____ ____  _           ____ _     ___
- \ \/ / __/ __ \| |         / ___| |   |_ _|
-  \  /\__ \ | | | |   ___  | |   | |    | |
-  /  \___/ |_| | |__/___/  | |___| |___ | |
- /_/\_\____\____/_____|      \____|_____|___|
+ __  ____________  __         ________    ____
+ \ \/ /_  __/ __ \/ /        / ____/ /   /  _/
+  \  / / / / / / / /  ______/ /   / /    / /  
+  / / / / / /_/ / /__/_____/ /___/ /____/ /   
+ /_/ /_/ /_____/_____/     \____/_____/___/   
 
 """
 
@@ -275,3 +275,28 @@ def print_dependency_status(ffmpeg_ok: bool, ffmpeg_ver: str, ytdlp_ok: bool, yt
         ver_s = f"[muted]{ver}[/muted]" if ver else "[muted]not found[/muted]"
         rows.append(f"  {sym}  [label]{name:<10}[/label]  {ver_s}")
     console.print("\n".join(rows) + "\n")
+
+
+def prompt_quality_selection(default_quality: str = "best") -> str:
+    import sys
+    choices = ["best", "8K", "4K", "2K", "1080p", "720p", "480p", "360p", "240p", "144p"]
+    
+    console.print("\n  [accent]Select video quality:[/accent]\n")
+    for i, q in enumerate(choices, 1):
+        def_label = " [dim](default)[/dim]" if q == default_quality else ""
+        console.print(f"    [{i:2d}] [label]{q:<6}[/label]{def_label}")
+    console.print()
+    
+    while True:
+        try:
+            choice = console.input("  [muted]Enter choice (1-10) or press Enter for default: [/muted]").strip()
+            if not choice:
+                return default_quality
+            if choice.isdigit():
+                idx = int(choice)
+                if 1 <= idx <= len(choices):
+                    return choices[idx - 1]
+            console.print("  [error]Invalid choice. Please enter a number between 1 and 10.[/error]")
+        except (EOFError, KeyboardInterrupt):
+            console.print()
+            sys.exit(0)
