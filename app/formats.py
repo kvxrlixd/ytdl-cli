@@ -226,3 +226,36 @@ def _format_sort_key(f: dict) -> tuple:
     except Exception:
         h = 0
     return (is_audio_only, -h, -(f.get("tbr") or 0))
+
+
+def get_available_qualities(url: str, cookies_browser: Optional[str] = None, cookies_file: Optional[str] = None) -> list[str]:
+    try:
+        formats_list = list_formats(url, cookies_browser, cookies_file)
+    except Exception:
+        return ["best", "8K", "4K", "2K", "1080p", "720p", "480p", "360p", "240p", "144p"]
+
+    heights = set()
+    for f in formats_list:
+        res = f.get("resolution")
+        if res and res != "audio only" and "x" in res:
+            try:
+                h = int(res.split("x")[-1])
+                heights.add(h)
+            except ValueError:
+                pass
+        elif res and res.endswith("p") and res[:-1].isdigit():
+            try:
+                h = int(res[:-1])
+                heights.add(h)
+            except ValueError:
+                pass
+
+    available = []
+    for q in ["8K", "4K", "2K", "1080p", "720p", "480p", "360p", "240p", "144p"]:
+        h = QUALITY_HEIGHT[q]
+        if any(abs(height - h) / h <= 0.05 for height in heights):
+            available.append(q)
+
+    if "best" not in available:
+        available.insert(0, "best")
+    return available

@@ -34,7 +34,7 @@ from app.config import (
     save_config,
 )
 from app.downloader import DownloadManager
-from app.formats import get_video_info, list_formats
+from app.formats import get_video_info, list_formats, get_available_qualities
 from app.ui import (
     confirm,
     console,
@@ -109,7 +109,9 @@ def get(
         quality, fps = "best", "best"
 
     if quality is None:
-        quality = prompt_quality_selection(cfg.default_quality or "best")
+        info("Fetching available video qualities…")
+        choices = get_available_qualities(url, cfg.cookies_browser, cfg.cookies_file)
+        quality = prompt_quality_selection(choices, cfg.default_quality or "best")
 
     # validate
     if quality not in QUALITY_CHOICES:

@@ -277,9 +277,8 @@ def print_dependency_status(ffmpeg_ok: bool, ffmpeg_ver: str, ytdlp_ok: bool, yt
     console.print("\n".join(rows) + "\n")
 
 
-def prompt_quality_selection(default_quality: str = "best") -> str:
+def prompt_quality_selection(choices: list[str], default_quality: str = "best") -> str:
     import sys
-    choices = ["best", "8K", "4K", "2K", "1080p", "720p", "480p", "360p", "240p", "144p"]
     
     console.print("\n  [accent]Select video quality:[/accent]\n")
     for i, q in enumerate(choices, 1):
@@ -289,14 +288,16 @@ def prompt_quality_selection(default_quality: str = "best") -> str:
     
     while True:
         try:
-            choice = console.input("  [muted]Enter choice (1-10) or press Enter for default: [/muted]").strip()
+            choice = console.input(f"  [muted]Enter choice (1-{len(choices)}) or press Enter for default: [/muted]").strip()
             if not choice:
-                return default_quality
+                if default_quality in choices:
+                    return default_quality
+                return choices[0]
             if choice.isdigit():
                 idx = int(choice)
                 if 1 <= idx <= len(choices):
                     return choices[idx - 1]
-            console.print("  [error]Invalid choice. Please enter a number between 1 and 10.[/error]")
+            console.print(f"  [error]Invalid choice. Please enter a number between 1 and {len(choices)}.[/error]")
         except (EOFError, KeyboardInterrupt):
             console.print()
             sys.exit(0)
